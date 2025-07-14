@@ -21,36 +21,36 @@ class Agent:
         self.trainer = QTrainer(self.model, lr=LR, gamma=self.gamma)
 
 
-    def get_state(self, snake_game):
-        head = snake_game.snake[0]
+    def get_state(self, game):
+        head = game.snake[0]
         point_l = Point(head.x - 20, head.y)
         point_r = Point(head.x + 20, head.y)
         point_u = Point(head.x, head.y - 20)
         point_d = Point(head.x, head.y + 20)
         
-        dir_l = snake_game.direction == Direction.LEFT
-        dir_r = snake_game.direction == Direction.RIGHT
-        dir_u = snake_game.direction == Direction.UP
-        dir_d = snake_game.direction == Direction.DOWN
+        dir_l = game.direction == Direction.LEFT
+        dir_r = game.direction == Direction.RIGHT
+        dir_u = game.direction == Direction.UP
+        dir_d = game.direction == Direction.DOWN
 
         state = [
             # Danger straight
-            (dir_r and snake_game._is_collision(point_r)) or 
-            (dir_l and snake_game._is_collision(point_l)) or 
-            (dir_u and snake_game._is_collision(point_u)) or 
-            (dir_d and snake_game._is_collision(point_d)),
+            (dir_r and game.is_collision(point_r)) or 
+            (dir_l and game.is_collision(point_l)) or 
+            (dir_u and game.is_collision(point_u)) or 
+            (dir_d and game.is_collision(point_d)),
 
             # Danger right
-            (dir_u and snake_game._is_collision(point_r)) or 
-            (dir_d and snake_game._is_collision(point_l)) or 
-            (dir_l and snake_game._is_collision(point_u)) or 
-            (dir_r and snake_game._is_collision(point_d)),
+            (dir_u and game.is_collision(point_r)) or 
+            (dir_d and game.is_collision(point_l)) or 
+            (dir_l and game.is_collision(point_u)) or 
+            (dir_r and game.is_collision(point_d)),
 
             # Danger left
-            (dir_d and snake_game._is_collision(point_r)) or 
-            (dir_u and snake_game._is_collision(point_l)) or 
-            (dir_r and snake_game._is_collision(point_u)) or 
-            (dir_l and snake_game._is_collision(point_d)),
+            (dir_d and game.is_collision(point_r)) or 
+            (dir_u and game.is_collision(point_l)) or 
+            (dir_r and game.is_collision(point_u)) or 
+            (dir_l and game.is_collision(point_d)),
             
             # Move direction
             dir_l,
@@ -59,10 +59,10 @@ class Agent:
             dir_d,
             
             # Food location 
-            snake_game.food.x < snake_game.head.x,  # food left
-            snake_game.food.x > snake_game.head.x,  # food right
-            snake_game.food.y < snake_game.head.y,  # food up
-            snake_game.food.y > snake_game.head.y  # food down
+            game.food.x < game.head.x,  # food left
+            game.food.x > game.head.x,  # food right
+            game.food.y < game.head.y,  # food up
+            game.food.y > game.head.y  # food down
             ]
 
         return np.array(state, dtype=int)
